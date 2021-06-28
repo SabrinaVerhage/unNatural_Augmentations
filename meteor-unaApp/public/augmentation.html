@@ -1,0 +1,177 @@
+<head>
+    <title>(un)natural augmentations</title>
+
+	<meta charset="utf-8"/>
+	<meta http-equiv="x-ua-compatible" content="ie=edge"/>
+	<meta
+		name="viewport"
+		content="width=device-width, height=device-height, viewport-fit=cover, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+  	/>
+	<meta name="mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+
+</head>
+
+
+<style>
+  .arjs-loader {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .arjs-loader div {
+    text-align: center;
+    font-size: 1.25em;
+    color: white;
+  }
+
+  .button {
+    display:inline-block;
+    padding:0.46em 1.6em;
+    border:0.1em solid #000000;
+    margin:0 0.2em 0.2em 0;
+    border-radius:0.5em;
+    text-decoration:none;
+    font-weight:300;
+    color:#000000;
+    background-color: white;
+    text-align:center;
+    transition: all 0.15s;
+    width: 100%;
+  }
+
+
+
+</style>
+
+
+<!-- rawgithack development URL -->
+<!-- <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script> -->
+<script src="https://aframe.io/releases/1.0.3/aframe.min.js"></script>
+
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+<script src="https://unpkg.com/aframe-transparent-video-shader@1.0.1/dist/aframe-transparent-video-shader.umd.js"></script>
+
+
+<script>
+
+  window.onload = function() {
+
+      const urlParams = new URLSearchParams(window.location.search);
+      let myArtID = urlParams.get('artID');
+      //console.log('this is the art ID ' + myArtID);
+
+      var thenfturl =  "https://una2021.storage.googleapis.com/001/001"; //set the NFT url
+      var theart_src; //set the art url
+
+      let insideGrey = urlParams.get('grey');
+
+      //UPDATE ART SRC
+      if(typeof myArtID == 'undefined') {
+        theart_src = "https://una2021.storage.googleapis.com/grid/art_out.webm";  
+        //the grid
+      } 
+
+      //UPDATE THE THINGS
+      if(insideGrey !== '0') {
+        thenfturl = "https://una2021.storage.googleapis.com/" + insideGrey + "/" + insideGrey;
+        theart_src = "https://una2021.storage.googleapis.com/" + insideGrey + "/art_out.webm";
+        //console.log('loading this asset ' + insideGrey);
+      } else {
+        thenfturl = "https://una2021.storage.googleapis.com/" + myArtID + "/" + myArtID;
+        theart_src = "https://una2021.storage.googleapis.com/" + myArtID + "/art_out.webm";
+        //console.log('loading this asset ' + myArtID);
+      }
+
+
+      ////////SET THE ART SRC
+      var vidEl = document.querySelector('#artVideo');
+      vidEl.setAttribute('src', theart_src);
+
+      ////////SET THE NFT URL
+      var nftEl = document.querySelector('a-nft');
+      nftEl.setAttribute('url', thenfturl);
+
+
+
+      AFRAME.registerComponent('videohandler', {
+          init: function () {
+            var marker = this.el;
+
+            this.vid = document.querySelector("#artVideo");
+
+            marker.addEventListener('markerFound', function () {
+                this.vid.play();
+            }.bind(this));
+
+            marker.addEventListener('markerLost', function() {
+              this.vid.pause();
+              this.vid.currentTime = 0;
+            }.bind(this));
+          }
+      });
+  };
+
+  function myFunction() {
+    //console.log('button return pressed');
+    location.href="/index.html?state=2";
+
+  }
+
+</script>
+
+
+<body style="margin : 0px; overflow: hidden;">
+  <!-- minimal loader shown until image descriptors are loaded -->
+  <div class="arjs-loader">
+    <div>Loading, please wait...</div>
+  </div>
+
+  <div style='position: fixed; width: 90%; bottom: 30px; left: 5vmin; z-index: 1;'>
+    <button class='button' onclick="myFunction()">
+        return
+    </button>
+  </div>
+
+  <a-scene
+    vr-mode-ui="enabled: false;"
+    renderer="logarithmicDepthBuffer: true;"
+    embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+  >
+    
+    <a-assets>
+        <video id="artVideo" src="https://ucarecdn.com/f1231712-7a4b-48b8-9ff8-bd12781017ef/art_out.webm" muted autoplay loop="true"></video>
+    </a-assets>    
+    
+    <a-nft
+      videohandler
+      type="nft"
+      url="./nummer001/nummer001"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance="0.01"
+      smoothThreshold="5"
+    >
+
+      <a-entity
+        material="shader: transparent-video; src: #artVideo"
+        geometry="primitive: plane;
+                  width: 100;
+                  height: 100"
+        position="40 0 -140"
+        rotation="-90 0 0" >
+      </a-entity>
+      
+      
+    </a-nft>
+    <a-entity camera></a-entity>
+  </a-scene>
+</body>

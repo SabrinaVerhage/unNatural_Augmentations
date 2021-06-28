@@ -1,0 +1,9 @@
+{
+	"galaxy.meteor.com": {
+    	"env": {
+    		"DEPLOY_HOSTNAME":"eu-west-1.galaxy.meteor.com",
+     		"MONGO_URL": "mongodb+srv://meteorUser:test12345@una.br2hx.mongodb.net/UNA?retryWrites=true&w=majority&ssl=true",  
+     		"ROOT_URL" : "https://www.unnatural-augmentations.com" 
+		}
+	}
+}
